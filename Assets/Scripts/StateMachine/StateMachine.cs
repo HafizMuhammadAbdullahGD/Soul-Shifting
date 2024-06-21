@@ -14,6 +14,7 @@ public class StateMachine : MonoBehaviour
     protected virtual void Exit() { _currentState = State.Exit; }
     public StateMachine Execute()
     {
+        _currentStateMachine = this;
         if (_currentState == State.Enter)
         {
             Enter();

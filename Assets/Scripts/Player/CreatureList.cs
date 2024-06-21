@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 public enum CreatureType
 {
-    Vampire,
+    Vampire, Alien
 }
 [System.Serializable]
 public class CreaturesData

@@ -19,8 +19,9 @@ public class CreatureCapturer : MonoBehaviour
     private void OnDisable()
     {
         //Enable Player Armature, *necessory because Controller will not work 
-        _playerCreature.transform.gameObject.SetActive(true);
-
+        if (_playerCreature)
+            _playerCreature.transform.gameObject.SetActive(true);
+        _panelTargetCapture.gameObject.SetActive(false);
     }
     private void Update()
     {
@@ -64,7 +65,6 @@ public class CreatureCapturer : MonoBehaviour
     {
         // will enable in ThirdPersonController script when gameobject enable
         GetComponent<ThirdPersonController>().CanMove = false;
-        print(GetComponent<ThirdPersonController>().CanMove);
         GetComponent<CharacterController>().enabled = false;
         //----------------------------------------------------------------
 
@@ -87,10 +87,13 @@ public class CreatureCapturer : MonoBehaviour
         _playerCreature.transform.position = _targetCreature.position;
         _playerCreature.transform.localRotation = _targetCreature.localRotation;
         _playerCreature.transform.root.gameObject.SetActive(true);
-        Destroy(_targetCreature.gameObject);
+
+        _playerCreature.GetComponent<PossessedCreature>().SelectCreature(_targetCreature);
+
+        _targetCreature.gameObject.SetActive(false);
 
         _playerCreature.transform.gameObject.SetActive(false);
-
+        isPossession = false;
         //no need of creature as player already have creature information
         this.transform.root.gameObject.SetActive(false);
     }

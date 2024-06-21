@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - CinemachineTarget
+  - PlayerSoul
   layers:
   - Default
   - TransparentFX

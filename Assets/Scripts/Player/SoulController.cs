@@ -13,11 +13,15 @@ public class SoulController : MonoBehaviour
 
     private Health _soulHealth;
 
-    private void Start()
+    private void Awake()
     {
         _startPosition = this.transform.localPosition;
-        print(_startPosition);
         _soulHealth = GetComponent<Health>();
+    }
+    private void OnEnable()
+    {
+        //Set the health when player soul activate
+        _soulHealth.SetHealth(100);
     }
     private void Update()
     {

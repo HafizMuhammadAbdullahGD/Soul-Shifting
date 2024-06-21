@@ -15,6 +15,10 @@ public class Health : MonoBehaviour
         _imgHealthBar.fillAmount = _currentHealth / 100;
         _txtHealthPercentage.text = _currentHealth + "%";
     }
+    public void DisableHealthUI()
+    {
+        _imgHealthBar.transform.parent.gameObject.SetActive(false);
+    }
     public void SetHealth(float newHealth)
     {
         _currentHealth = newHealth;

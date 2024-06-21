@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 [System.Serializable]
-public struct BeamCoolDownUI
+public struct CoolDownUI
 {
     public Transform Panel;
     public TextMeshProUGUI TxtCoolDown;
@@ -22,7 +22,7 @@ public class BeamShooter : MonoBehaviour
 
     private float _currentTime = 0;
 
-    [SerializeField] private BeamCoolDownUI _beamCoolDownUI;
+    [SerializeField] private CoolDownUI _beamCoolDownUI;
 
 
 
@@ -32,6 +32,12 @@ public class BeamShooter : MonoBehaviour
     private void Awake()
     {
         _currentTime = Time.time - _bulletCoolDownInterval;
+    }
+    private void OnDisable()
+    {
+        //Turn off CoolDown UI if enable
+        _beamCoolDownUI.Panel.gameObject.SetActive(false);
+
     }
     private void Update()
     {
