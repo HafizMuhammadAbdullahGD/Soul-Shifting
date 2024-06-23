@@ -16,8 +16,16 @@ public class CreatureCapturer : MonoBehaviour
 
     private Transform _targetCreature;
     bool isPossession;
+
+    private void OnEnable()
+    {
+        PossessedCreature.EventLeavePossessedCreature += StartPossession;
+
+    }
     private void OnDisable()
     {
+        PossessedCreature.EventLeavePossessedCreature -= StartPossession;
+
         //Enable Player Armature, *necessory because Controller will not work 
         if (_playerCreature)
             _playerCreature.transform.gameObject.SetActive(true);
@@ -26,6 +34,7 @@ public class CreatureCapturer : MonoBehaviour
     private void Update()
     {
         if (isPossession) return;
+        _targetCreature = FindTargetInRange();
         _targetCreature = FindTargetInRange();
         if (_targetCreature)
         {
@@ -56,13 +65,21 @@ public class CreatureCapturer : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
-            isPossession = true;
-
-            StartCoroutine(StartPossession());
+            StartPossession();
         }
     }
-    IEnumerator StartPossession()
+    void StartPossession()
     {
+        _targetCreature = FindTargetInRange();
+
+        StartCoroutine(PossessionState());
+
+    }
+    IEnumerator PossessionState()
+    {
+        isPossession = true;
+
+
         // will enable in ThirdPersonController script when gameobject enable
         GetComponent<ThirdPersonController>().CanMove = false;
         GetComponent<CharacterController>().enabled = false;
