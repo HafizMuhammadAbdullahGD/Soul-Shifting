@@ -1,19 +1,9 @@
 using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
-[System.Serializable]
-public struct CoolDownUI
-{
-    public Transform Panel;
-    public TextMeshProUGUI TxtCoolDown;
-    public Image ImgLoading;
-}
 public class BeamShooter : MonoBehaviour
 {
     [SerializeField] AnimationCurve _bulletSpeed;
-    [SerializeField] private Transform _bullet;
+    [SerializeField] private Transform _beam;
     [SerializeField] private LayerMask _targetLayer;
     [SerializeField] private float _attackRadius;
     [SerializeField] private float _bulletCoolDownInterval;
@@ -29,7 +19,7 @@ public class BeamShooter : MonoBehaviour
     private Transform _targetToShoot;
 
 
-    private void Awake()
+    private void OnEnable()
     {
         _currentTime = Time.time - _bulletCoolDownInterval;
     }
@@ -41,6 +31,7 @@ public class BeamShooter : MonoBehaviour
     }
     private void Update()
     {
+        //if left mouse click
         if (Input.GetMouseButtonDown(0))
         {
             Shoot();
@@ -57,6 +48,32 @@ public class BeamShooter : MonoBehaviour
 
         //Start Releasing Beam
         StartCoroutine(ReleasedBeam());
+
+    }
+
+    //beam shoot logic
+    private IEnumerator ReleasedBeam()
+    {
+
+
+        float newLength;
+        float currentTime = 0;
+        while (_bulletMaxDistance - _beam.transform.localScale.y > 0.01f)
+        {
+            FindAndLookAtTarget();
+            currentTime += Time.deltaTime;
+            newLength = Mathf.Lerp(_beam.transform.localScale.y, _bulletMaxDistance, _bulletSpeed.Evaluate(currentTime) * Time.deltaTime);
+            _beam.transform.localScale = new Vector3(_beam.transform.localScale.x, newLength, _beam.transform.localScale.z);
+            yield return null;
+        }
+        newLength = 0;
+        _beam.transform.localScale = new Vector3(_beam.transform.localScale.x, newLength, _beam.transform.localScale.z);
+
+        //reset Time for cool down
+        _currentTime = Time.time;
+        _targetToShoot = null;
+
+        StartCoroutine(CoolDownInterval());
 
     }
     private IEnumerator CoolDownInterval()
@@ -80,49 +97,16 @@ public class BeamShooter : MonoBehaviour
 
 
     }
-    //beam shoot logic
-    private IEnumerator ReleasedBeam()
-    {
-
-
-        float newLength;
-        float currentTime = 0;
-        while (_bulletMaxDistance - _bullet.transform.localScale.y > 0.01f)
-        {
-            FindAndLookAtTarget();
-            currentTime += Time.deltaTime;
-            newLength = Mathf.Lerp(_bullet.transform.localScale.y, _bulletMaxDistance, _bulletSpeed.Evaluate(currentTime) * Time.deltaTime);
-            _bullet.transform.localScale = new Vector3(_bullet.transform.localScale.x, newLength, _bullet.transform.localScale.z);
-            yield return null;
-        }
-        newLength = 0;
-        _bullet.transform.localScale = new Vector3(_bullet.transform.localScale.x, newLength, _bullet.transform.localScale.z);
-
-        //reset Time for cool down
-        _currentTime = Time.time;
-        _targetToShoot = null;
-
-        StartCoroutine(CoolDownInterval());
-
-    }
     // look at target while attacking
     void FindAndLookAtTarget()
     {
-        _targetToShoot = FindTargetInRange();
-
+        //Find target in give radius of target layer 
+        _targetToShoot = Finder.FindFirstTargetInRange(this.transform.position, _attackRadius, _targetLayer);
         if (_targetToShoot)
             this.transform.LookAt(_targetToShoot);
 
     }
-    //Find target in give radius of target layer 
-    Transform FindTargetInRange()
-    {
-        Collider[] colliders = Physics.OverlapSphere(this.transform.position, _attackRadius, _targetLayer);
-        if (colliders?.Length > 0)
-            return colliders[0].transform;
-        return null;
 
-    }
     //will run if game execute in untiy editor
 #if UNITY_EDITOR
     private void OnDrawGizmosSelected()

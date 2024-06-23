@@ -16,27 +16,22 @@ public class PossessedCreature : MonoBehaviour
     [SerializeField] private float _creatureCaputringMaxHealth;
     private float _currentTime;
     [SerializeField] private Transform _playerSoul;
-    [SerializeField] private Transform _selectedCreature;
     [SerializeField] private Transform _panelTargetCapture;
     [SerializeField] private CreatureList _ceatures;
 
 
-    public static event Func<Transform> EventCapturedAlready;
-
-    //Reset everything when enable
-
-    [SerializeField] private Transform _targetCreature;
+    private Transform _selectedCreature;
+    private Transform _targetCreature;
     public static event Action EventLeavePossessedCreature;
-    private void Awake()
-    {
-        _currentTime = _creatureLeaveTime;
-    }
     private void OnEnable()
     {
+        _currentTime = _creatureLeaveTime;
+
     }
     private void OnDisable()
     {
-        _playerSoul.transform.gameObject.SetActive(true);
+        if (_playerSoul)
+            _playerSoul.transform.gameObject.SetActive(true);
 
     }
     public void SelectCreature(Transform targetCreature)
@@ -52,7 +47,8 @@ public class PossessedCreature : MonoBehaviour
     void Update()
     {
 
-        _targetCreature = FindTargetInRange();
+        _targetCreature = Finder.FindFirstTargetInRange(this.transform.position, _capturingRadius, _targetLayer);
+
         if (_targetCreature)
         {
 
@@ -64,17 +60,18 @@ public class PossessedCreature : MonoBehaviour
                 {
                     _panelTargetCapture.gameObject.SetActive(true);
                     CaptureCreature();
+
                 }
             }
 
         }
-        else if (Input.GetKey(KeyCode.E))
+        if (Input.GetKey(KeyCode.E))
         {
             //Start leaving creature
             LeaveCreature();
             return;
         }
-        else
+        else if (!_targetCreature)
         {
             if (_panelTargetCapture.gameObject.activeSelf)
                 _panelTargetCapture.gameObject.SetActive(false);
@@ -141,12 +138,5 @@ public class PossessedCreature : MonoBehaviour
 
         }
     }
-    private Transform FindTargetInRange()
-    {
-        Collider[] colliders = Physics.OverlapSphere(this.transform.position, _capturingRadius, _targetLayer);
-        if (colliders?.Length > 0)
-            return colliders[0].transform;
-        return null;
 
-    }
 }

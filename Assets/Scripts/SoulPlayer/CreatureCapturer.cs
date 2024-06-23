@@ -15,7 +15,7 @@ public class CreatureCapturer : MonoBehaviour
     [SerializeField] Transform _playerCreature;
 
     private Transform _targetCreature;
-    bool isPossession;
+    bool isPossessedState;
 
     private void OnEnable()
     {
@@ -33,9 +33,9 @@ public class CreatureCapturer : MonoBehaviour
     }
     private void Update()
     {
-        if (isPossession) return;
-        _targetCreature = FindTargetInRange();
-        _targetCreature = FindTargetInRange();
+        if (isPossessedState) return;
+
+        _targetCreature = Finder.FindFirstTargetInRange(this.transform.position, _capturingRadius, _targetLayer);
         if (_targetCreature)
         {
 
@@ -70,14 +70,14 @@ public class CreatureCapturer : MonoBehaviour
     }
     void StartPossession()
     {
-        _targetCreature = FindTargetInRange();
+        _targetCreature = Finder.FindFirstTargetInRange(this.transform.position, _capturingRadius, _targetLayer);
 
         StartCoroutine(PossessionState());
 
     }
     IEnumerator PossessionState()
     {
-        isPossession = true;
+        isPossessedState = true;
 
 
         // will enable in ThirdPersonController script when gameobject enable
@@ -110,18 +110,11 @@ public class CreatureCapturer : MonoBehaviour
         _targetCreature.gameObject.SetActive(false);
 
         _playerCreature.transform.gameObject.SetActive(false);
-        isPossession = false;
+        isPossessedState = false;
         //no need of creature as player already have creature information
         this.transform.root.gameObject.SetActive(false);
     }
-    private Transform FindTargetInRange()
-    {
-        Collider[] colliders = Physics.OverlapSphere(this.transform.position, _capturingRadius, _targetLayer);
-        if (colliders?.Length > 0)
-            return colliders[0].transform;
-        return null;
 
-    }
 #if UNITY_EDITOR
     private void OnDrawGizmosSelected()
     {

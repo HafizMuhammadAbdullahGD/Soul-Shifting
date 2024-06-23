@@ -10,7 +10,7 @@ public class CreatureAttackState : StateMachine
     private int _animationID;
     private Animator _animator;
     private Transform _player;
-    bool isDamage;
+    bool isAttacked;
     private void Start()
     {
 
@@ -20,7 +20,7 @@ public class CreatureAttackState : StateMachine
     }
     protected override void Enter()
     {
-        isDamage = false;
+        isAttacked = false;
         _animator.SetBool(_animationID, true);
         _animator.SetLayerWeight(_animationLayerIndex, 1);
         base.Tick();
@@ -46,34 +46,37 @@ public class CreatureAttackState : StateMachine
     }
     bool IsPunched()
     {
-        float _animationProgress = _animator.GetCurrentAnimatorStateInfo(_animationLayerIndex).normalizedTime;
+        float animationProgress = _animator.GetCurrentAnimatorStateInfo(_animationLayerIndex).normalizedTime;
+        Transform target = null;
         //if animation done about 90%
-        if (_animationProgress >= 0.9f)
+        if (animationProgress >= 0.9f)
         {
             _animator.SetBool(_animationID, false);
             return true;
         }
-        if (_animationProgress >= 0.70 && !isDamage)
+        if (animationProgress >= 0.30)
+        {
+            target = Finder.FindFirstTargetInRange(_player.transform.position, _targetInRadius, _targetLayer);
+
+            if (target)
+                _player.transform.LookAt(target);
+
+        }
+        if (animationProgress >= 0.70 && !isAttacked)
         {
             //attack on near target if found
-            FindTargetInRange()?.GetComponent<IDamage>()?.OnDamage(_attackDamageRate);
-            isDamage = true;
+            target?.GetComponent<IDamage>()?.OnDamage(_attackDamageRate);
+            isAttacked = true;
         }
         return false;
     }
-    private Transform FindTargetInRange()
-    {
-        Collider[] colliders = Physics.OverlapSphere(_player.transform.position, _targetInRadius, _targetLayer);
-        if (colliders?.Length > 0)
-            return colliders[0].transform;
-        return null;
 
-    }
 #if UNITY_EDITOR
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(_player.transform.position, _targetInRadius);
+        if (_player)
+            Gizmos.DrawWireSphere(_player.transform.position, _targetInRadius);
     }
 #endif
 }
