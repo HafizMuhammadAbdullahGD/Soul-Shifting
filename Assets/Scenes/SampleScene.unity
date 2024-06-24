@@ -2557,6 +2557,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 93232534471739644, guid: b5aaf9b8d2283564fbb0cd9b6d3dcab1,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5289499930129087482, guid: b5aaf9b8d2283564fbb0cd9b6d3dcab1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2612,6 +2617,11 @@ PrefabInstance:
       propertyPath: _playerCreature
       value: 
       objectReference: {fileID: 8732348683615770763}
+    - target: {fileID: 7014740717134525551, guid: b5aaf9b8d2283564fbb0cd9b6d3dcab1,
+        type: 3}
+      propertyPath: _bulletCoolDownInterval
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7014740717134525551, guid: b5aaf9b8d2283564fbb0cd9b6d3dcab1,
         type: 3}
       propertyPath: _bulletSpeed.m_Curve.Array.size

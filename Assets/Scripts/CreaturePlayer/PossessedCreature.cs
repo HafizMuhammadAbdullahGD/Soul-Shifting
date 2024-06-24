@@ -20,7 +20,7 @@ public class PossessedCreature : MonoBehaviour
     [SerializeField] private CreatureList _ceatures;
 
 
-    private Transform _selectedCreature;
+    [SerializeField] private Transform _selectedCreature;
     private Transform _targetCreature;
     public static event Action EventLeavePossessedCreature;
     private void OnEnable()
@@ -86,7 +86,9 @@ public class PossessedCreature : MonoBehaviour
         {
             _currentTime = 0;
             LeaveCreature();
+            print(1);
             EventLeavePossessedCreature?.Invoke();
+
         }
     }
     void LeaveCreature()

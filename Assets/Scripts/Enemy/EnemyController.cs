@@ -18,6 +18,7 @@ public class EnemyController : MonoBehaviour, IDamage
         _enemyHealth.Damage(damageRate);
         if (_enemyHealth.IsDead())
         {
+
             Died();
         }
     }

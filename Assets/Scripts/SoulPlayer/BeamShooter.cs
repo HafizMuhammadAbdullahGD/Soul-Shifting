@@ -45,7 +45,7 @@ public class BeamShooter : MonoBehaviour
         if (Time.time - _bulletCoolDownInterval <= _currentTime) { return; }
         //when shooting start, then it can not shoot until cool down interval passed!
         _currentTime = Time.time;
-
+        _beam.GetComponentInChildren<CapsuleCollider>().enabled = true;
         //Start Releasing Beam
         StartCoroutine(ReleasedBeam());
 
@@ -72,6 +72,7 @@ public class BeamShooter : MonoBehaviour
         //reset Time for cool down
         _currentTime = Time.time;
         _targetToShoot = null;
+        _beam.GetComponentInChildren<CapsuleCollider>().enabled = false;
 
         StartCoroutine(CoolDownInterval());
 

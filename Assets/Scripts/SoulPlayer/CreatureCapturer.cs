@@ -14,7 +14,7 @@ public class CreatureCapturer : MonoBehaviour
     [SerializeField] private Transform _panelTargetCapture;
     [SerializeField] Transform _playerCreature;
 
-    private Transform _targetCreature;
+    [SerializeField] private Transform _targetCreature;
     bool isPossessedState;
 
     private void OnEnable()
@@ -71,7 +71,6 @@ public class CreatureCapturer : MonoBehaviour
     void StartPossession()
     {
         _targetCreature = Finder.FindFirstTargetInRange(this.transform.position, _capturingRadius, _targetLayer);
-
         StartCoroutine(PossessionState());
 
     }
