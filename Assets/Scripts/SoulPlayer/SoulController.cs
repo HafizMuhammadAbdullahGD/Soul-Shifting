@@ -33,12 +33,12 @@ public class SoulController : MonoBehaviour
             _soulHealth.Damage(_damgeRatePerSecond);
             if (_soulHealth.IsDead())
             {
-                RespawnSould();
+                RespawnSoul();
             }
         }
     }
 
-    private void RespawnSould()
+    private void RespawnSoul()
     {
         _soulHealth.SetHealth(100);
         //Character controller not allow to change position directly, have to disable it when assign new position

@@ -14,12 +14,10 @@ public struct CreatureStates
 }
 public class CreatureStatesHandler : MonoBehaviour
 {
-    //-------------------For Future Use---------------------
     [SerializeField] private List<CreatureStates> _creatureStates;
     public List<CreatureStates> GetCreatureStates()
     {
         return _creatureStates;
     }
-    //-------------------For Future Use---------------------
 
 }

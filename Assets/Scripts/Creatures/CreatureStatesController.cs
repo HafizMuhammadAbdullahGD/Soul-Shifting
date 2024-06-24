@@ -14,8 +14,10 @@ public class CreatureStatesController : MonoBehaviour
     private StateMachine _currentState;
     private bool isAttacked;
     private bool isCoolDown;
-    void Start()
+
+    void OnEnable()
     {
+
         isAttacked = false;
         isCoolDown = true;
     }
@@ -41,13 +43,15 @@ public class CreatureStatesController : MonoBehaviour
     bool CanAttack()
     {
         //if one state executing
-        if (_currentState) return false;
 
+        if (_currentState) return false;
         if (isAttacked)
         {
             StartCoroutine(CoolDownInterval());
             isAttacked = false;
         }
+
+
         //return until attack cool down
         if (!isCoolDown) return false;
 
